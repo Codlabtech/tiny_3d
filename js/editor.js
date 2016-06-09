@@ -131,12 +131,9 @@ function editor_init(reference_shapes, container, output) {
     var eventX = event.clientX - container.offset().left;
     var eventY = event.clientY - container.offset().top;
 
-    console.log(event.clientX +" "+eventX);
-
     mouse.x = ( eventX / getSceneWidth() ) * 2 - 1;
     mouse.y = - ( eventY / getSceneHeight()) * 2 + 1;
 
-    console.log("Click."+event.clientX+" "+mouse.x);
     var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
     projector.unprojectVector( vector, camera );
     var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
@@ -144,8 +141,6 @@ function editor_init(reference_shapes, container, output) {
     var intersects = ray.intersectObjects( splineHelperObjects);//targetList );
 
     if ( intersects.length > 0 ){
-      console.log("Hit @ " + toString( intersects[0].point ) );
-      // change the color of the closest face.
       intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 );
       intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
 
@@ -231,7 +226,6 @@ function changeCurrentSelectedTo(type){
     var description = object.description;
     description.type = type;
 
-    console.log(description.type);
     removeObject(object);
     transformControl.update();
     addSplineObject(description);
@@ -408,18 +402,20 @@ function forceSetY(transformation_controller){
 
 function createDefaultShape(){
   return {
-    x: 0,
-    y: 0,
-    z: 0,
+    x: Math.random()*100,
+    y: Math.random()*100,
+    z: Math.random()*100,
     width: 100,
     height:100,
     depth:100,
+    rx:0,
+    ry:0,
+    rz:0,
     type: CUBE
   };
 }
 
 function setY(object, new_y){
-  console.log((object.scale.y/2) + new_y);
   var last_position = object.position.y;
   if(isNumeric(new_y))
   object.position.y = parseInt(new_y) + object.scale.y/2;
